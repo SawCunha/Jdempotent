@@ -1,6 +1,7 @@
 package com.trendyol.jdempotent.redis.configuration;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -11,6 +12,7 @@ import org.springframework.core.env.PropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
+@AutoConfiguration
 @ConditionalOnProperty(
         prefix="jdempotent", name = "enable",
         havingValue = "true",

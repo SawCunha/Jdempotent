@@ -1,3 +1,8 @@
+server:
+  port: 8880
+  servlet:
+    context-path: /demo_redis
+
 jdempotent:
   enable: true
   cryptography:
@@ -8,7 +13,7 @@ jdempotent:
       password: "jdempotent"
       sentinelHostList: localhost
       sentinelPort: "26379"
-      sentinelMasterName: "jdempotent"
+      sentinelMasterName: "mymaster"
       expirationTimeHour: 2
       dialTimeoutSecond: 3
       readTimeoutSecond: 3
@@ -30,7 +35,9 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-
+  cloud:
+    bootstrap:
+      enabled: true
 template:
   welcoming:
     subject: "Welcoming"

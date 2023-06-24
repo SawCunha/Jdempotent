@@ -24,8 +24,8 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -61,7 +61,7 @@ public class CouchbaseIdempotentRepositoryTest {
     when(collection.exists(idempotencyKey.getKeyValue())).thenReturn(existsResult);
 
     //When
-    Boolean isContain = couchbaseIdempotentRepository.contains(idempotencyKey);
+    boolean isContain = couchbaseIdempotentRepository.contains(idempotencyKey);
 
     //Then
     verify(collection, times(1)).exists(idempotencyKey.getKeyValue());
@@ -77,7 +77,7 @@ public class CouchbaseIdempotentRepositoryTest {
     when(collection.exists(idempotencyKey.getKeyValue())).thenReturn(existsResult);
 
     //When
-    Boolean isContain = couchbaseIdempotentRepository.contains(idempotencyKey);
+    boolean isContain = couchbaseIdempotentRepository.contains(idempotencyKey);
 
     //Then
     verify(collection, times(1)).exists(idempotencyKey.getKeyValue());

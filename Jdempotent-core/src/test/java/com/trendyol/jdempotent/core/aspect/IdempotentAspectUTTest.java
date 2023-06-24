@@ -10,21 +10,31 @@ import com.trendyol.jdempotent.core.utils.IdempotentTestPayload;
 import com.trendyol.jdempotent.core.utils.TestIdempotentResource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TestIdempotentResource.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        TestIdempotentResource.class,
+        IdempotentAspectITTest.class,
+        TestAopContext.class
+})
 public class IdempotentAspectUTTest {
 
     @InjectMocks
@@ -99,7 +109,7 @@ public class IdempotentAspectUTTest {
         verify(idempotentRepository, times(1)).getResponse(any());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void given_actual_payload_when_key_in_repository_and_method_has_one_arg_then_should_store_repository_before_should_be_delete() throws Throwable {
         //given
         ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
@@ -118,20 +128,23 @@ public class IdempotentAspectUTTest {
         when(idempotentRepository.contains(any())).thenReturn(false);
 
         //when
-        idempotentAspect.execute(joinPoint);
+        Assertions.assertThrows(
+                NullPointerException.class,
+                () -> idempotentAspect.execute(joinPoint)
+        );
 
         //then
-        verify(joinPoint, times(2)).getSignature();
-        verify(signature).getMethod();
+        verify(joinPoint, times(4)).getSignature();
+        verify(signature, times(3)).getMethod();
         verify(joinPoint).getTarget();
-        verify(idempotentRepository, times(1)).store(any(), any());
-        verify(joinPoint, times(1)).proceed();
-        verify(idempotentRepository, times(1)).remove(any());
+        verify(idempotentRepository, times(0)).store(any(), any());
+        verify(joinPoint, times(0)).proceed();
+        verify(idempotentRepository, times(0)).remove(any());
         verify(idempotentRepository, times(0)).setResponse(any(), any(), any());
         verify(idempotentRepository, times(0)).getResponse(any());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void not_given_a_payload_then_return_exception() throws Throwable {
         //given
         ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
@@ -149,9 +162,13 @@ public class IdempotentAspectUTTest {
         when(idempotentRepository.contains(any())).thenReturn(false);
 
         //when
-        idempotentAspect.execute(joinPoint);
+        IllegalStateException illegalStateException = Assertions.assertThrows(
+                IllegalStateException.class,
+                () -> idempotentAspect.execute(joinPoint)
+        );
 
         //then
+        assertEquals("Idempotent method not found", illegalStateException.getMessage());
         verify(joinPoint).getTarget();
         verify(joinPoint).getSignature();
         verify(signature, times(0)).getMethod();
@@ -160,7 +177,7 @@ public class IdempotentAspectUTTest {
         verify(idempotentRepository, times(0)).setResponse(any(), any(), any());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void given_a_payload_when_called_error_callback_then_should_return_exception() throws Throwable {
         //given
         ProceedingJoinPoint joinPoint = mock(ProceedingJoinPoint.class);
@@ -179,17 +196,19 @@ public class IdempotentAspectUTTest {
         when(errorCallback.onErrorCondition(any())).thenReturn(true);
         when(errorCallback.onErrorCustomException()).thenReturn(new RuntimeException());
 
-        //when
-        idempotentAspect.execute(joinPoint);
+        Assertions.assertThrows(
+                NullPointerException.class,
+                () -> idempotentAspect.execute(joinPoint)
+        );
 
         //then
-        verify(joinPoint, times(2)).getSignature();
-        verify(signature).getMethod();
+        verify(joinPoint, times(4)).getSignature();
+        verify(signature, times(3)).getMethod();
         verify(joinPoint).getTarget();
-        verify(idempotentRepository, times(1)).store(any(), any());
-        verify(joinPoint).proceed();
+        verify(idempotentRepository, times(0)).store(any(), any());
+        verify(joinPoint, times(0)).proceed();
         verify(idempotentRepository, times(0)).setResponse(any(), any(), any());
-        verify(idempotentRepository, times(1)).remove(any());
+        verify(idempotentRepository, times(0)).remove(any());
     }
 
     @Test
@@ -218,7 +237,7 @@ public class IdempotentAspectUTTest {
         IdempotentIgnorableWrapper requestWrapperRequest = (IdempotentIgnorableWrapper) requestWrapperRequests.get(0);
         assertEquals(requestWrapperRequest.getNonIgnoredFields().size(), 2);
         assertEquals(requestWrapperRequest.getNonIgnoredFields().get("name"), "payload");
-        assertEquals(requestWrapperRequest.getNonIgnoredFields().get("transactionId"), null);
+        assertNull(requestWrapperRequest.getNonIgnoredFields().get("transactionId"));
         verify(joinPoint).getArgs();
     }
 

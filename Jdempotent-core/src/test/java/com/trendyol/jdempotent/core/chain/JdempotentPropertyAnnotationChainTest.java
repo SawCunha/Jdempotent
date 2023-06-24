@@ -3,14 +3,14 @@ package com.trendyol.jdempotent.core.chain;
 import com.trendyol.jdempotent.core.model.ChainData;
 import com.trendyol.jdempotent.core.model.KeyValuePair;
 import com.trendyol.jdempotent.core.utils.IdempotentTestPayload;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class JdempotentPropertyAnnotationChainTest {
 
     @InjectMocks

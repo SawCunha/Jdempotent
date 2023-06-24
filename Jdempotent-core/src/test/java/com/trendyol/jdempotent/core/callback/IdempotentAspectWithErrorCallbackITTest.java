@@ -9,20 +9,29 @@ import com.trendyol.jdempotent.core.model.IdempotentRequestWrapper;
 import com.trendyol.jdempotent.core.utils.IdempotentTestPayload;
 import com.trendyol.jdempotent.core.utils.TestException;
 import com.trendyol.jdempotent.core.utils.TestIdempotentResource;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {IdempotentAspectWithErrorCallbackITTest.class, TestAopWithErrorCallbackContext.class, TestIdempotentResource.class, DefaultKeyGenerator.class, InMemoryIdempotentRepository.class})
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        IdempotentAspectWithErrorCallbackITTest.class,
+        TestAopWithErrorCallbackContext.class,
+        TestIdempotentResource.class,
+        DefaultKeyGenerator.class,
+        InMemoryIdempotentRepository.class
+})
 public class IdempotentAspectWithErrorCallbackITTest {
 
     @Autowired
@@ -54,7 +63,7 @@ public class IdempotentAspectWithErrorCallbackITTest {
         assertTrue(idempotentRepository.contains(idempotencyKey));
     }
 
-    @Test(expected = TestException.class)
+    @Test
     public void given_invalid_payload_when_trigger_aspect_then_throw_test_exception_from_custom_error_callback_and_remove_repository() throws NoSuchAlgorithmException {
         //given
         IdempotentTestPayload test = new IdempotentTestPayload();
@@ -65,9 +74,13 @@ public class IdempotentAspectWithErrorCallbackITTest {
         IdempotencyKey idempotencyKey = defaultKeyGenerator.generateIdempotentKey(new IdempotentRequestWrapper(wrapper), "TestIdempotentResource", new StringBuilder(), MessageDigest.getInstance(CryptographyAlgorithm.MD5.value()));
 
         //when
-        testIdempotentResource.idempotentMethodReturnArg(test);
+        TestException testException = Assertions.assertThrows(
+                TestException.class,
+                () -> testIdempotentResource.idempotentMethodReturnArg(test)
+        );
 
         //then
+        assertEquals("Name will not be test", testException.getMessage());
         assertFalse(idempotentRepository.contains(idempotencyKey));
     }
 }

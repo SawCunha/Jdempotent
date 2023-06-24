@@ -3,18 +3,18 @@ package com.trendyol.jdempotent.core.chain;
 import com.trendyol.jdempotent.core.model.ChainData;
 import com.trendyol.jdempotent.core.model.KeyValuePair;
 import com.trendyol.jdempotent.core.utils.IdempotentTestPayload;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class JdempotentNoAnnotationChainTest {
 
     @InjectMocks
@@ -23,14 +23,10 @@ public class JdempotentNoAnnotationChainTest {
     @Mock
     private JdempotentDefaultChain jdempotentDefaultChain;
 
-    @Before
-    public void setup(){
-        jdempotentNoAnnotationChain.next(jdempotentDefaultChain);
-    }
-
     @Test
     public void should_process_with_no_annotation() throws IllegalAccessException, NoSuchFieldException {
         //Given
+        jdempotentNoAnnotationChain.next(jdempotentDefaultChain);
         MockData mockData = new MockData();
         ChainData chainData = new ChainData();
         chainData.setArgs(mockData);
@@ -41,13 +37,14 @@ public class JdempotentNoAnnotationChainTest {
 
         //Then
         assertEquals("name", process.getKey());
-        assertEquals(null, process.getValue());
+        assertNull(process.getValue());
     }
 
 
     @Test
     public void should_process_with_another_annotated_property() throws IllegalAccessException, NoSuchFieldException {
         //Given
+        jdempotentNoAnnotationChain.next(jdempotentDefaultChain);
         IdempotentTestPayload idempotentTestPayload = new IdempotentTestPayload();
         idempotentTestPayload.setEventId(1l);
         ChainData chainData = new ChainData();
@@ -61,7 +58,7 @@ public class JdempotentNoAnnotationChainTest {
         verify(jdempotentDefaultChain).process(eq(chainData));
     }
 
-    class MockData{
+    static class MockData{
         private String name;
     }
 }

@@ -20,7 +20,7 @@ For Redis:
 <dependency>
     <groupId>com.trendyol</groupId>
     <artifactId>Jdempotent-spring-boot-redis-starter</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 For Couchbase:
@@ -29,7 +29,7 @@ For Couchbase:
 <dependency>
     <groupId>com.trendyol</groupId>
     <artifactId>Jdempotent-spring-boot-couchbase-starter</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
@@ -205,3 +205,4 @@ As it is shown in the following image, the most cpu consuming part of Jdempotent
 ## Contributors
 
 - [memojja](https://github.com/memojja) Mehmet ARI - creator, maintainer
+- [sawcunha](https://github.com/sawcunha) Mehmet ARI - maintainer

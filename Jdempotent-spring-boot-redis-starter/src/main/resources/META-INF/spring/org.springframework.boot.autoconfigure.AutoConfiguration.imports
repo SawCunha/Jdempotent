@@ -1,0 +1,5 @@
+com.trendyol.jdempotent.redis.configuration.RedisConfigProperties
+com.trendyol.jdempotent.redis.configuration.RedisSentinelConfiguration
+org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+com.trendyol.jdempotent.redis.configuration.RedisEnvironmentPostProcessor
+com.trendyol.jdempotent.redis.configuration.ApplicationConfig

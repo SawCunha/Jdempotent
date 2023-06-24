@@ -2,15 +2,15 @@ package com.trendyol.jdempotent.redis.configuration;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
 /**
  *
  */
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(
         prefix="jdempotent", name = "enable",
         havingValue = "true",

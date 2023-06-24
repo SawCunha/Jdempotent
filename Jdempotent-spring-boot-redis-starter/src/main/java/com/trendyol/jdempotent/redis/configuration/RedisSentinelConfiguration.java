@@ -2,12 +2,9 @@ package com.trendyol.jdempotent.redis.configuration;
 
 
 import com.trendyol.jdempotent.core.model.IdempotentResponseWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -22,8 +19,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
         havingValue = "true",
         matchIfMissing = true)
 public class RedisSentinelConfiguration {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RedisConfiguration.class);
 
     private final RedisConfigProperties redisProperties;
 
