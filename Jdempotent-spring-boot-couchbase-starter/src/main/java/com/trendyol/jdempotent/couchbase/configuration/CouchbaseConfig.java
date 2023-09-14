@@ -2,6 +2,7 @@ package com.trendyol.jdempotent.couchbase.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
 
 @ConditionalOnProperty(
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
         havingValue = "true",
         matchIfMissing = true)
 @Configuration
+@RefreshScope
 public class CouchbaseConfig {
     @Value("${jdempotent.cache.couchbase.connection-string}")
     private String connectionString;

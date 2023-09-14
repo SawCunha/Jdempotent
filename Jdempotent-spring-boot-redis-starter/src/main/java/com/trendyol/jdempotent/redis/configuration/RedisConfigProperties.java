@@ -4,6 +4,7 @@ package com.trendyol.jdempotent.redis.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
         prefix="jdempotent", name = "enable",
         havingValue = "true",
         matchIfMissing = true)
+@RefreshScope
 public class RedisConfigProperties {
 
     @Value("${jdempotent.cache.redis.database:0}")
