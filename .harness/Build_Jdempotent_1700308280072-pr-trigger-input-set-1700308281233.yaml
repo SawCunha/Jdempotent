@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_Jdempotent_1700308280072-pr-trigger-input-set
+  identifier: Build_Jdempotent_1700308280072prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: InsideSoftwares
+  pipeline:
+    identifier: Build_Jdempotent_1700308280072
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
